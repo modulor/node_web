@@ -3,8 +3,8 @@ block contenido
 	div.container
 		div.row
 			div.col-sm-6.col-sm-offset-3
-				h4 Nuevo Producto
-				form(method="post" action="/producto" enctype="multipart/form-data")
+				h4 Editar Producto
+				form(method="post" action="/productos/editar/#{producto.id}?_method=put" enctype="multipart/form-data")
 					div.panel.panel-default
 						div.panel-heading
 							h3.panel-title Informaci&oacute;n del producto
@@ -14,12 +14,12 @@ block contenido
 								input(type="file" name="imagen")
 							div.form-group
 								label Nombre
-								input(type="text" name="title" placeholder="Nombre del producto" class="form-control")
+								input(type="text" name="title" placeholder="Nombre del producto" class="form-control" value="#{producto.title}")
 							div.form-group
 								label Precio
-								input(type="number" name="pricing" placeholder="Precio del producto" class="form-control")
+								input(type="number" name="pricing" placeholder="Precio del producto" class="form-control" value="#{producto.pricing}")
 							div.form-group
 								label Descripci&oacute;n
-								textarea(name="descripcion" class="form-control" rows="8")
+								textarea(name="descripcion" class="form-control" rows="8")= producto.descripcion
 						div.panel-footer.text-center
 							button.btn.btn-info Guardar

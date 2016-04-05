@@ -1,0 +1,17 @@
+extends ../base_layout.jade
+block contenido
+	div.container
+		div.row
+			div.col-sm-8.col-sm-offset-2
+				h4.text-center Lista de productos
+				div.row
+				each producto in productos
+					div.col-sm-6.col-md-4
+						div.thumbnail.thumbnail-products
+							img(src="#{ producto.imagen }" alt="{ producto.title }")
+							div.caption
+								h3= producto.title
+								p #[strong $#{producto.pricing}] 
+								p= producto.descripcion
+								p.text-center
+									a.btn.btn-primary(href="/productos/editar/#{producto.id}" class="" role="button") Editar

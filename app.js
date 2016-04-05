@@ -1,3 +1,5 @@
+/***********************************************************************/
+
 // express js
 
 var express = require("express");
@@ -42,7 +44,16 @@ cloudinary.config({
 	api_secret: 'IWDybPBsi8d0hEmxNz89VO4XjOw'
 });
 
+// method-override (para usar metodo PUT en formularios)
 
+var method_override = require("method-override");
+
+app.use(method_override("_method"));
+
+/***********************************************************************/
+
+
+/***********************************************************************/
 
 // definir un modelo (tabla)
 
@@ -54,6 +65,11 @@ var productoSchema = {
 };
 
 var Product = mongoose.model("products", productoSchema);
+
+/***********************************************************************/
+
+
+/***********************************************************************/
 
 // home
 
@@ -69,7 +85,7 @@ app.get("/productos/nuevo/", function(solicitud, respuesta){
 
 });
 
-// producto (post)
+// producto (nuevo producto)
 
 app.post("/producto", function(solicitud, respuesta){
 
@@ -77,9 +93,6 @@ app.post("/producto", function(solicitud, respuesta){
 
 	cloudinary.uploader.upload(solicitud.file.path, 
 		function(result){ 
-
-			console.log("url:");
-			console.log(result.url);
 
 			// guardar producto
 
@@ -96,7 +109,7 @@ app.post("/producto", function(solicitud, respuesta){
 
 			producto.save(function(err){
 
-				respuesta.render("index");
+				respuesta.redirect("/productos/lista");
 
 			});
 
@@ -107,6 +120,63 @@ app.post("/producto", function(solicitud, respuesta){
 
 });
 
+// lista de productos
+
+app.get("/productos/lista/", function(solicitud, respuesta){
+
+	// buscar los productos en la base de datos (mongo)
+
+	Product.find(function(error,doc){
+
+		if(error)
+			console.log(error);
+
+		respuesta.render("productos/lista",{productos: doc});
+
+	});
+
+
+});
+
+// editar producto (formulario)
+
+app.get("/productos/editar/:id",function(solicitud, respuesta){
+
+	Product.findOne({"_id": solicitud.params.id},function(error,documento){
+
+		if(error){
+			console.log(error);
+			respuesta.end();
+		}
+			
+		else{
+			respuesta.render("productos/editar",{producto: documento});
+		}			
+
+	});
+
+});
+
+// editar producto (put)
+
+app.put("/productos/editar/:id",function(solicitud,respuesta){
+
+	var data = {
+		title: solicitud.body.title,
+		descripcion: solicitud.body.descripcion,
+		pricing: solicitud.body.pricing
+	};
+
+	Product.update({"_id": solicitud.params.id},data,function(product){
+
+		respuesta.redirect("/productos/lista");
+
+	});
+
+});
+
 // puerto 
 
 app.listen(8080);
+
+/***********************************************************************/

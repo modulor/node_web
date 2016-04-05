@@ -4,3 +4,7 @@ body{
 	background-color: #FAFAFA;
 	font-family: 'Open Sans', sans-serif;
 }
+
+.thumbnail-products{
+	min-height: 450px;
+}
