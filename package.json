@@ -1,0 +1,28 @@
+{
+  "name": "node_web",
+  "version": "1.0.0",
+  "description": "simple node web application",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.13.4",
+    "jade": "^1.11.0",
+    "mongoose": "^4.4.10"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/modulor/node_web/"
+  },
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "modulor2k.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/modulor/node_web/issues"
+  },
+  "homepage": "https://github.com/modulor/node_web#readme"
+}
