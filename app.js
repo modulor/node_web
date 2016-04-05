@@ -10,21 +10,6 @@ var mongoose = require("mongoose");
 
 mongoose.connect("mongodb://localhost/webapp");
 
-// definir un modelo (tabla)
-
-/*
-
-var productoSchema = {
-	title: String,
-	descripcion: String,
-	imageUrl: String,
-	pricing: Number
-};
-
-var Product = mongoose.model("Product", productoSchema);
-
-*/
-
 // jade (template html)
 
 app.set("view engine","jade");
@@ -33,29 +18,46 @@ app.set("view engine","jade");
 
 app.use(express.static("public"));
 
+// body parser
+
+var boddyParser = require("body-parser");
+
+app.use(boddyParser.json());
+
+app.use(boddyParser.urlencoded({extended: true}));
+
+// multer (para imagenes)
+
+var multer = require("multer");
+
+app.use(multer({dest: './uploads'}).single('imagen'));
+
+// cloudinary (cloud para almacenar imagenes)
+
+var cloudinary = require("cloudinary");
+
+cloudinary.config({
+	cloud_name: 'modulor2k',
+	api_key: '349587919447627',
+	api_secret: 'IWDybPBsi8d0hEmxNz89VO4XjOw'
+});
+
+
+
+// definir un modelo (tabla)
+
+var productoSchema = {
+	title: String,
+	descripcion: String,
+	pricing: Number,
+	imagen: String
+};
+
+var Product = mongoose.model("products", productoSchema);
+
 // home
 
-app.get("/",function(solicitud, respuesta){
-	
-	/*
-
-	// insertar un registro
-
-	var data ={
-		title: "Mi primer producto",
-		descripcion: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis debitis laborum temporibus fugiat harum quis minima, aut quam. Asperiores iure optio adipisci quae amet, deserunt corporis ex quasi! Odio, vero.",
-		imageUrl: "data.png",
-		pricing: 9.99
-	};
-
-	var producto = new Product(data);
-
-	console.log("producto");
-
-	producto.save(function(err){
-		console.log(producto);
-	});
-	*/	
+app.get("/",function(solicitud, respuesta){		
 	respuesta.render("index");
 });
 
@@ -64,6 +66,44 @@ app.get("/",function(solicitud, respuesta){
 app.get("/productos/nuevo/", function(solicitud, respuesta){
 
 	respuesta.render("productos/nuevo");
+
+});
+
+// producto (post)
+
+app.post("/producto", function(solicitud, respuesta){
+
+	// console.log(solicitud.file.originalname);
+
+	cloudinary.uploader.upload(solicitud.file.path, 
+		function(result){ 
+
+			console.log("url:");
+			console.log(result.url);
+
+			// guardar producto
+
+			var data = {
+				title: solicitud.body.title,
+				descripcion: solicitud.body.descripcion,
+				pricing: solicitud.body.pricing,
+				imagen: result.url
+			};
+
+			// creacion de un producto
+
+			var producto = new Product(data);
+
+			producto.save(function(err){
+
+				respuesta.render("index");
+
+			});
+
+		}
+	);
+
+	
 
 });
 

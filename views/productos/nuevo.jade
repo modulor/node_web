@@ -1,6 +1,25 @@
 extends ../base_layout.jade
 block contenido
-	.container
-		.row
-			.col-md-12
-				h4 Nuevo Producto...
+	div.container
+		div.row
+			div.col-sm-6.col-sm-offset-3
+				h4 Nuevo Producto
+				form(method="post" action="/producto" enctype="multipart/form-data")
+					div.panel.panel-default
+						div.panel-heading
+							h3.panel-title Informaci&oacute;n del producto
+						div.panel-body
+							div.form-group
+								label Nombre
+								input(type="text" name="title" placeholder="Nombre del producto" class="form-control")
+							div.form-group
+								label Precio
+								input(type="number" name="pricing" placeholder="Precio del producto" class="form-control")
+							div.form-group
+								label Descripci&oacute;n
+								textarea(name="descripcion" class="form-control" rows="8")
+							div.form-group
+								label Imagen del producto
+								input(type="file" name="imagen")
+						div.panel-footer.text-center
+							button.btn.btn-info Guardar
